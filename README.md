@@ -6,9 +6,9 @@
 
 - [x] Node version manager setup (NVM)
 
-- [] Node JS project setup
+- [x] Node JS project setup
 
-- [] Typescript setup
+- [x] Typescript setup
 
 - [] Prettier setup
 
