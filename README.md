@@ -14,7 +14,7 @@
 
 -   [x] Eslint setup
 
--   [] Git hooks setup
+-   [x] Git hooks setup
 
 -   [] Application config setup
 
