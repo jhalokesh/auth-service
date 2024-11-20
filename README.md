@@ -10,7 +10,7 @@
 
 - [x] Typescript setup
 
-- [] Prettier setup
+- [x] Prettier setup
 
 - [] Eslint setup
 

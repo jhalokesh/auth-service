@@ -4,6 +4,8 @@
   "description": "The user management service",
   "main": "index.js",
   "scripts": {
+    "format:fix": "prettier . --write",
+    "format:check": "prettier . --check",
     "dev": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.9.1",
+    "prettier": "3.3.3",
     "typescript": "^5.6.3"
   }
 }

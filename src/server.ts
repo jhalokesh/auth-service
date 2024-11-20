@@ -2,4 +2,4 @@ function welcome(name: String) {
   console.log("Welcome" + name);
 }
 
-welcome("Lokesh 
+welcome("Lokesh");
