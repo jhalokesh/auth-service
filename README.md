@@ -20,7 +20,7 @@
 
 -   [x] Express JS app setup
 
--   [] Logger setup
+-   [x] Logger setup
 
 -   [] Error handling setup
 
