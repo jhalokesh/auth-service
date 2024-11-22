@@ -16,7 +16,7 @@
 
 -   [x] Git hooks setup
 
--   [] Application config setup
+-   [x] Application config setup
 
 -   [] Express JS app setup
 
