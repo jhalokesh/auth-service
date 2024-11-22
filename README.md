@@ -22,7 +22,7 @@
 
 -   [x] Logger setup
 
--   [] Error handling setup
+-   [x] Error handling setup
 
 -   [] Tests setup
 
