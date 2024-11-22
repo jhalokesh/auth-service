@@ -18,7 +18,7 @@
 
 -   [x] Application config setup
 
--   [] Express JS app setup
+-   [x] Express JS app setup
 
 -   [] Logger setup
 
