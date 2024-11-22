@@ -26,4 +26,4 @@
 
 -   [x] Tests setup
 
--   [] Create template
+-   [x] Create template
