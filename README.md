@@ -24,6 +24,6 @@
 
 -   [x] Error handling setup
 
--   [] Tests setup
+-   [x] Tests setup
 
 -   [] Create template
