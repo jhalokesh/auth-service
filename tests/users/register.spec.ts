@@ -41,6 +41,21 @@ describe('POST /auth/register', () => {
                 expect.stringContaining('json')
             );
         });
+
+        it('should persist the user in the database', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Lokesh',
+                lastName: 'Jha',
+                email: 'lokesh@mern.space',
+                password: 'secret',
+            };
+
+            // Act
+            await request(app).post('/auth/register').send(userData);
+
+            // Assert
+        });
     });
 
     // sad path
