@@ -10,7 +10,7 @@
             "npm run lint:fix"
         ]
     },
-    "main": "index.js",
+    "main": "server.ts",
     "scripts": {
         "format:fix": "prettier . --write",
         "format:check": "prettier . --check",

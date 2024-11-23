@@ -1,3 +1,4 @@
 # Auth service
 
--   [x] Containerize the application using Docker
+-   [x] Following TDD
+-   [x] Setup user register tests
