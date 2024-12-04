@@ -13,6 +13,7 @@ export class UserService {
                 lastName,
                 email,
                 password,
+                role: 'customer',
             });
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
