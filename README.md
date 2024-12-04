@@ -100,7 +100,8 @@ src/
 ├── services/     # Business logic and database interactions
 ├── types/        # TypeScript type definitions
 ├── utils/        # Utility functions
-└── tests/        # Test files for endpoints and business logic
+
+tests/            # Test files for endpoints and business logic
 ```
 
 ## Contributing
