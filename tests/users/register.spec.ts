@@ -151,6 +151,36 @@ describe('POST /auth/register', () => {
             expect(user[0].password).toHaveLength(60);
             expect(user[0].password).toMatch(/^\$2b\$\d+\$/);
         });
+
+        it('should return a 400 status code if email already exists', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Lokesh',
+                lastName: 'Jha',
+                email: 'lokesh@mern.space',
+                password: 'secret',
+            };
+
+            // Saving a user
+            const userRepository = AppDataSource.getRepository(User);
+            await userRepository.save({
+                ...userData,
+                role: 'customer',
+            });
+
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            const users = await userRepository.find();
+            // const user = users[0];
+            console.log(users);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            expect(users).toHaveLength(1);
+        });
     });
 
     // sad path
