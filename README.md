@@ -9,15 +9,26 @@ The **Auth Service** is a microservice for user authentication, developed with *
 -   **User Registration**:
 
     -   **Endpoint**: `POST /auth/register`
+    -   **Robust Input Validation**:
+        -   Validates all required fields using `express-validator`
+        -   Ensures data integrity and security
     -   Validates the following required fields:
-        -   `firstName`
-        -   `lastName`
-        -   `email`
-        -   `password`
+        -   `firstName`: Required, trimmed
+        -   `lastName`: Required, trimmed
+        -   `email`: Required, must be a valid email format
+        -   `password`:
+            -   Required
+            -   Minimum length of 8 characters
     -   Responds with:
-        -   **201** status code for successful registrations.
-        -   JSON-formatted responses.
-    -   Ensures user data is persisted in the database.
+        -   **201** status code for successful registrations
+        -   JSON-formatted responses
+    -   Ensures user data is persisted in the database
+
+-   **Validation**:
+
+    -   Leverages `express-validator` for comprehensive input validation
+    -   Centralized validation logic in `src/validators`
+    -   Provides clear, descriptive error messages for invalid inputs
 
 -   **Testing**:
 
@@ -100,6 +111,7 @@ src/
 ├── services/     # Business logic and database interactions
 ├── types/        # TypeScript type definitions
 ├── utils/        # Utility functions
+├── validators/   # Validation logic
 
 tests/            # Test files for endpoints and business logic
 ```
