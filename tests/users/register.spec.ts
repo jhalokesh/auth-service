@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
 import { Roles } from '../../src/constants';
 import { isJwt } from '../utils';
+import { RefreshToken } from '../../src/entity/RefreshToken';
 
 describe('POST /auth/register', () => {
     let connection: DataSource;
@@ -125,7 +126,7 @@ describe('POST /auth/register', () => {
             await request(app).post('/auth/register').send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const user = await userRepository.find();
 
             expect(user[0]).toHaveProperty('role');
@@ -145,7 +146,7 @@ describe('POST /auth/register', () => {
             await request(app).post('/auth/register').send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const user = await userRepository.find();
 
             expect(user[0].password).not.toBe(userData.password);
@@ -163,7 +164,7 @@ describe('POST /auth/register', () => {
             };
 
             // Saving a user
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             await userRepository.save({
                 ...userData,
                 role: 'customer',
@@ -220,6 +221,34 @@ describe('POST /auth/register', () => {
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
         });
+
+        it('should store the refresh token in the database', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Lokesh',
+                lastName: 'Jha',
+                email: 'lokesh@mern.space',
+                password: 'password',
+            };
+
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            const refreshTokenRepository =
+                connection.getRepository(RefreshToken);
+
+            const tokens = await refreshTokenRepository
+                .createQueryBuilder('refreshToken')
+                .where('refreshToken.userId = :userId', {
+                    userId: (response.body as Record<string, string>).id,
+                })
+                .getMany();
+
+            expect(tokens).toHaveLength(1);
+        });
     });
 
     // sad path
@@ -238,7 +267,7 @@ describe('POST /auth/register', () => {
                 .post('/auth/register')
                 .send(userData);
 
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
 
             // Assert
@@ -261,7 +290,7 @@ describe('POST /auth/register', () => {
                 .send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(0);
@@ -282,7 +311,7 @@ describe('POST /auth/register', () => {
                 .send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(0);
@@ -302,7 +331,7 @@ describe('POST /auth/register', () => {
                 .send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(0);
@@ -323,7 +352,7 @@ describe('POST /auth/register', () => {
             await request(app).post('/auth/register').send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             const user = users[0];
 
@@ -367,7 +396,7 @@ describe('POST /auth/register', () => {
                 .send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
 
             expect(response.statusCode).toBe(400);
@@ -389,7 +418,7 @@ describe('POST /auth/register', () => {
                 .send(userData);
 
             // Assert
-            const userRepository = AppDataSource.getRepository(User);
+            const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
 
             expect(response.statusCode).toBe(400);

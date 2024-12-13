@@ -1,19 +1,16 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 import { NextFunction, Response } from 'express';
-import { JwtPayload, sign } from 'jsonwebtoken';
-import { RegisterUserRequest } from '../types';
-import { UserService } from '../services/UserService';
-import { Logger } from 'winston';
 import { validationResult } from 'express-validator';
-import createHttpError from 'http-errors';
-import { Config } from '../config';
+import { JwtPayload } from 'jsonwebtoken';
+import { Logger } from 'winston';
+import { TokenService } from '../services/TokenService';
+import { UserService } from '../services/UserService';
+import { RegisterUserRequest } from '../types';
 
 export class AuthController {
     constructor(
         private userService: UserService,
-        private logger: Logger
+        private logger: Logger,
+        private tokenService: TokenService
     ) {}
 
     async register(
@@ -23,7 +20,7 @@ export class AuthController {
     ) {
         // validations
         const result = validationResult(req);
-        // console.log(result);
+
         if (!result.isEmpty()) {
             return res.status(400).json({ errors: result.array() });
         }
@@ -48,21 +45,6 @@ export class AuthController {
 
             this.logger.info('User has been registered', { id: user.id });
 
-            let privateKey: Buffer;
-            try {
-                privateKey = fs.readFileSync(
-                    path.join(__dirname, '../../certs/privateKey.pem')
-                );
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            } catch (err) {
-                const error = createHttpError(
-                    500,
-                    'Error while reading private key'
-                );
-                next(error);
-                return;
-            }
-
             const accessTokenPayload: JwtPayload = {
                 sub: String(user.id),
                 role: user.role,
@@ -73,20 +55,17 @@ export class AuthController {
                 role: user.role,
             };
 
-            const accessToken = sign(accessTokenPayload, privateKey, {
-                algorithm: 'RS256',
-                expiresIn: '1h',
-                issuer: 'auth-service',
+            const accessToken =
+                this.tokenService.generateAccessToken(accessTokenPayload);
+
+            // Persit then refresh token
+            const newRefreshToken =
+                await this.tokenService.persistRefreshToken(user);
+
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...refreshTokenPayload,
+                id: String(newRefreshToken.id),
             });
-            const refreshToken = sign(
-                refreshTokenPayload,
-                Config.REFRESH_TOKEN_KEY!,
-                {
-                    algorithm: 'HS256',
-                    expiresIn: '1y',
-                    issuer: 'auth-service',
-                }
-            );
 
             res.cookie('accessToken', accessToken, {
                 domain: 'localhost',
