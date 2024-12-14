@@ -2,8 +2,10 @@ import { checkSchema } from 'express-validator';
 
 export default checkSchema({
     email: {
-        notEmpty: true,
-        errorMessage: 'Email is required!',
+        notEmpty: {
+            bail: true,
+            errorMessage: 'Email is required!',
+        },
         trim: true,
         isEmail: {
             errorMessage: 'Not a valid email!',
@@ -20,8 +22,10 @@ export default checkSchema({
         errorMessage: 'Last name is required!',
     },
     password: {
-        notEmpty: true,
-        errorMessage: 'Password is required!',
+        notEmpty: {
+            bail: true,
+            errorMessage: 'Password is required!',
+        },
         isLength: {
             options: {
                 min: 8,
