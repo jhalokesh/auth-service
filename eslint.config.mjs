@@ -22,9 +22,9 @@ export default tseslint.config(
         ignores: [
             'node_modules',
             'dist',
+            'scripts/',
             'eslint.config.mjs',
             'jest.config.js',
-            'scripts/generateKeys.mjs',
         ],
     }
 );

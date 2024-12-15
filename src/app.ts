@@ -9,8 +9,9 @@ import authRouter from './routes/auth';
 
 const app = express();
 
-app.use(express.json());
+app.use(express.static('public'));
 app.use(cookieParser());
+app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to express auth service');
