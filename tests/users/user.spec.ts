@@ -87,5 +87,48 @@ describe('GET /auth/self', () => {
             // Check if user id matches with registered user
             expect((response.body as Record<string, string>).id).toBe(user.id);
         });
+
+        it('should not return password field', async () => {
+            // Register user
+            const userData = {
+                firstName: 'Lokesh',
+                lastName: 'Jha',
+                email: 'lokesh@mern.space',
+                password: 'password',
+                role: Roles.CUSTOMER,
+            };
+
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(
+                userData.password,
+                saltRounds
+            );
+
+            const userRepository = connection.getRepository(User);
+            const user = await userRepository.save({
+                ...userData,
+                password: hashedPassword,
+            });
+
+            // Generate Token
+            const accessTokenPayload: JwtPayload = {
+                sub: String(user.id),
+                role: user.role,
+            };
+
+            const accessToken = jwks.token(accessTokenPayload);
+
+            // Add token to cookie
+            const response = await request(app)
+                .get('/auth/self')
+                .set('Cookie', [`accessToken=${accessToken}`])
+                .send();
+
+            // Assert
+            // Check if user id matches with registered user
+            expect(response.body as Record<string, string>).not.toHaveProperty(
+                'password'
+            );
+        });
     });
 });
