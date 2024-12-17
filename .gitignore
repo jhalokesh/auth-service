@@ -121,3 +121,4 @@ dist
 
 # Keys directory - Public and Private Keys
 certs/
+public/.well-known

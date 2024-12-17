@@ -11,7 +11,7 @@ const generateKeys = () => {
             format: 'pem',
         },
         privateKeyEncoding: {
-            type: 'pkcs1',
+            type: 'pkcs8',
             format: 'pem',
         },
     });
