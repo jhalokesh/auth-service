@@ -12,6 +12,7 @@ import { CredentialService } from '../services/CredentialService';
 import authenticate from '../middlewares/authenticate';
 import { AuthRequest } from '../types';
 import validateRefreshToken from '../middlewares/validateRefreshToken';
+import parseRefreshToken from '../middlewares/parseRefreshToken';
 
 const router = express.Router();
 
@@ -71,6 +72,19 @@ router.post(
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             await authController.refresh(req as AuthRequest, res, next);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+router.post(
+    '/logout',
+    authenticate,
+    parseRefreshToken,
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            await authController.logout(req as AuthRequest, res, next);
         } catch (error) {
             next(error);
         }
